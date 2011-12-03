@@ -1,0 +1,21 @@
+<component name="libraryTable">
+  <library name="httpclient">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/httpcore-4.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/httpmime-4.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/httpclient-4.1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib-src/httpcomponents-core-4.1.2-src.zip!/httpcomponents-core-4.1.2/httpcore-contrib/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/lib-src/httpcomponents-client-4.1.2-src.zip!/httpcomponents-client-4.1.2/httpmime/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/lib-src/httpcomponents-client-4.1.2-src.zip!/httpcomponents-client-4.1.2/httpclient/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/lib-src/httpcomponents-core-4.1.2-src.zip!/httpcomponents-core-4.1.2/httpcore-nio/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/lib-src/httpcomponents-client-4.1.2-src.zip!/httpcomponents-client-4.1.2/httpclient-cache/src/test/java" />
+      <root url="jar://$PROJECT_DIR$/lib-src/httpcomponents-core-4.1.2-src.zip!/httpcomponents-core-4.1.2/httpcore/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/lib-src/httpcomponents-core-4.1.2-src.zip!/httpcomponents-core-4.1.2/httpcore-ab/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/lib-src/httpcomponents-client-4.1.2-src.zip!/httpcomponents-client-4.1.2/httpclient-cache/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/lib-src/httpcomponents-client-4.1.2-src.zip!/httpcomponents-client-4.1.2/httpclient-contrib/src/main/java" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,7 +1,6 @@
 <component name="libraryTable">
   <library name="lib">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/httpcore-4.0.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/paypal_platform_base_src_AP.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/paypal_platform_stubs_AA.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jaxb-impl.jar!/" />
@@ -10,7 +9,6 @@
       <root url="jar://$PROJECT_DIR$/lib/saaj-impl.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/saaj-api.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/paypal_platform_stubs_AP.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/httpmime-4.0.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.0.4.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/paypal_platform_base_src_AA.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/gson-1.4.jar!/" />
@@ -22,7 +20,6 @@
       <root url="jar://$PROJECT_DIR$/lib/jaxws-api.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/paypal_platform_stubs_src_AP.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/activation.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/httpclient-4.0.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jaxws-tools.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.8.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jaxb-xjc.jar!/" />

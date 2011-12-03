@@ -8,6 +8,7 @@
 
 	<property file="build.properties" />
 	<property environment="env" />
+	<property name="env.TEMP" value="out" />
 	<property name="buildtemp" value="${env.TEMP}/platformsdkbuild" />
 
 	<property name="classes" value="${buildtemp}/classes" />

@@ -44,8 +44,11 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.AuthState;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -58,6 +61,8 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import common.com.paypal.platform.sdk.exceptions.FatalException;
@@ -91,12 +96,15 @@ public class CallerServices {
 	private static boolean trustAll;
 	private static boolean logging = false;
 	private static boolean client_auth_certificate = false;
+
 	private final static String APIUSER_CERTIFICATE_PATH = "APIUSER_CERTIFICATE_PATH";
 	private final static String APIUSER_CERTIFICATE_PASSWORD = "APIUSER_CERTIFICATE_PASSWORD";
 	private final static String JSSE_PROVIDER = "JSSE_PROVIDER";
+
 	private static String propsLocation = "config/paypal_sdk_client.properties";
 	protected OutputStream output = new StringOutputStream();
 	private boolean apiCallStatus = false;
+	private HttpClient httpClient;
 	
 	/**
 	 * Returns the status of the last API call
@@ -266,7 +274,6 @@ public class CallerServices {
 	 */
 	HostnameVerifier hv = new HostnameVerifier()
 	{
-		@Override
         public boolean verify(String urlHostname, SSLSession session)
 		{
 			return true;
@@ -533,9 +540,9 @@ public class CallerServices {
 
 	protected void addLogHandler(BindingProvider bp) {
 		Binding binding = bp.getBinding();
-		List handlerList = binding.getHandlerChain();
+		List<Handler> handlerList = binding.getHandlerChain();
 		if (handlerList == null)
-			handlerList = new ArrayList();
+			handlerList = new ArrayList<Handler>();
 		SOAPMessageLoggingHandler loggingHandler = new SOAPMessageLoggingHandler(output);
 		handlerList.add(loggingHandler);
 		binding.setHandlerChain(handlerList);
@@ -543,17 +550,22 @@ public class CallerServices {
 	}
 
 	public  String call(String payload,String endpoint) throws FatalException{
-			HttpEntity entity = null;
-			String response = "";
+			if (httpClient == null) {
+				throw new IllegalStateException("HttpClient is not set");
+			}
+			HttpEntity entity;
 			try {
-				log.debug(clientprops.getProperty("X-PAYPAL-REQUEST-DATA-FORMAT")+" request : "+payload.toString());
+				log.debug(clientprops.getProperty("X-PAYPAL-REQUEST-DATA-FORMAT")+" request : "+payload);
 				URL url = new URL(endpoint);
 				HttpHost target = new HttpHost(url.getHost(), 443,"https");
-				
+
+				HttpContext context = new BasicHttpContext();
+
 				// general setup
 				SchemeRegistry supportedSchemes = new SchemeRegistry();
-				supportedSchemes.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-				supportedSchemes.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+				supportedSchemes.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
+				supportedSchemes.register(new Scheme("https", 443, SSLSocketFactory.getSocketFactory()));
+				context.setAttribute(ClientContext.SCHEME_REGISTRY, supportedSchemes);
 
 				// prepare parameters
 				HttpParams params = new BasicHttpParams();
@@ -566,9 +578,7 @@ public class CallerServices {
 					    params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(proxyHost, proxyPort));
 					}
 				}
-				ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, supportedSchemes);
-				DefaultHttpClient httpclient = new DefaultHttpClient(ccm,params);
-				
+
 				if ("true".equalsIgnoreCase(clientprops.getProperty("USE_PROXY"))) {
 					String proxyHost =(String) clientprops.get("PROXY_HOST");
 					int proxyPort = Integer.parseInt( (String)clientprops.get("PROXY_PORT") );
@@ -576,31 +586,34 @@ public class CallerServices {
 					String proxyPassword = (String) clientprops.get("PROXY_PASSWORD");
 					
 					if( (proxyUsername != null) && (proxyPassword != null) ) {
-						httpclient.getCredentialsProvider().setCredentials(
-					new AuthScope(proxyHost, proxyPort), new UsernamePasswordCredentials(proxyUsername, proxyPassword));
+						AuthState state = new AuthState();
+						state.setAuthScope(new AuthScope(proxyHost, proxyPort));
+						state.setCredentials(new UsernamePasswordCredentials(proxyUsername, proxyPassword));
+						context.setAttribute(ClientContext.PROXY_AUTH_STATE, state);
 					}
 				}
 				HttpPost req = new HttpPost(url.toString());
+				req.setParams(params);
 				HttpEntity reqEntity = new StringEntity(payload, "UTF-8");
-
-
 				req.setEntity(reqEntity);
 				addHeaders(req,clientprops);
-				HttpResponse rsp = httpclient.execute(target, req);
+
+				HttpResponse rsp = httpClient.execute(target, req, context);
 				int statusCode=rsp.getStatusLine().getStatusCode();
 				if ( statusCode != 200 ) {
 					throw new FatalException("HTTP Error code " + statusCode + " received, transaction not submitted");
 				}
 				entity = rsp.getEntity();
 
-				response = EntityUtils.toString(entity);
+				String response = EntityUtils.toString(entity);
 				
-				log.debug(clientprops.getProperty("X-PAYPAL-RESPONSE-DATA-FORMAT")+" response : "+response.toString());
+				log.debug(clientprops.getProperty("X-PAYPAL-RESPONSE-DATA-FORMAT")+" response : "+ response);
+				return response;
 			} catch (Exception e) {
 				throw new FatalException("Transaction Failed : ", e);
 			}
-			return response;
 		}
+
 		private void addHeaders(HttpPost httppost,Properties prop){
 			if(prop.containsKey("X-PAYPAL-REQUEST-SOURCE")){
 				String value=(String)prop.get("X-PAYPAL-REQUEST-SOURCE");
