@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<project name="paypaljsp" default="main" basedir=".">
+	<description>
+		Ant build file for PayPal Platform JSP Sample
+	</description>
+
+	<!-- properties -->
+	
+	<property environment="env"/>
+	<property name="project.name" value="paypal_platform_AA"/>
+	<property name="classes.home" value="web/WEB-INF/classes"/>
+	<property name="web.home" value="web"/>
+	<property name="lib.home" value="../../../lib"/>
+	<property name="dist.home" value="dist" />
+
+	<target name="main" depends="clean, init, soapwar"/>
+
+	<target name="SoapSamples" depends="clean, init, soapwar"/>
+
+	<target name="clean" description="Delete all auto-generated files">
+		<delete includeEmptyDirs="true" failonerror="false">
+			<fileset dir="${dist.home}" defaultexcludes="no"/>
+		</delete>
+	</target>
+
+	<!-- Create directories required for build -->
+	<target name="init">
+		<mkdir dir="${dist.home}"/>
+	</target>
+	
+
+	<target name="soapwar">
+		<war destfile="${dist.home}/${project.name}.war" webxml="${web.home}/WEB-INF/web.xml">
+			<webinf dir="${web.home}/WEB-INF"/>
+			<fileset dir="${web.home}">
+				<exclude name="nvp"/>
+				<exclude name="nvp/*"/>
+				<exclude name="WEB-INF/*"/>
+
+			</fileset>
+
+			<lib dir="${lib.home}">
+				<include name="**/*.jar"/>
+				<exclude name="*_AP.jar"/>
+				
+			</lib>
+		</war>
+	</target>
+</project>

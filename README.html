@@ -1,0 +1,349 @@
+<html>
+	<head>
+		<title>PayPal Platform Java SDK</title>
+	    <style type="text/css">
+			body {				
+				font: normal .7em "Verdana", "Arial", sans-serif;
+				margin: 15px 10px;
+				width: 800px;
+				color: #333333;
+			}
+			ul, ol {
+				padding:0 0 0 30px;
+			}
+			pre {
+				font-size: 120%;
+			}
+			a {
+				color: #369;
+				text-decoration: none;
+			}
+			a:hover {
+				text-decoration: underline;
+			}
+			img {
+				border: 0;
+			}
+			p {
+				margin: 10;
+				padding-top: 10px;				
+			}
+			h1, h2, h3, h4, h5, h6 {
+				color:#28426E;
+				margin-bottom:0.5em !important;
+			}
+			h2, h3 {
+				color:#E27133 !important;				
+				font-weight:bold;				
+				margin: 25px 0 0;
+			}
+
+			h1 {
+				font-style:italic;
+				line-height:1em;
+				font-size:22pt;
+			}
+			li {
+				padding-top:3px;
+			}
+			hr {
+				background-color:#CCCCCC;
+				border:0 none;
+				height:1px;
+			}
+		</style>
+    </head>
+<body>
+	<h1 align='center'>PayPal Platform Java SDK</h1>
+	<br/>
+	<h2>Table of contents</h2>
+	<ul>
+		<li><a href='#overview'><b>Overview</b></a></li>
+		<li><a href='#prerequisites'><b>Prerequisites</b></a></li>
+		<li><a href='#contents'>SDK contents</a></li>	
+		<li><a href='#contents'><b>Running the samples</b></a></li>
+		<li><a href='#using'>Integrating the SDK</a></li>
+		<li><a href='#logging'>Logging</a></li>				
+		<li><a href='#configuration'>Property files and configuration</a></li>
+		<li><a href='#building'>Building the SDK</a></li>
+		<li><a href='#troubleshooting'>Troubleshooting tips</a></li>
+		<li><a href='#documentation'>Documentation and support</a></li>
+		<li><a href='#licensing'>Licensing</a></li>		
+	</ul>
+	<br/><br/>
+	<a name='overview'></a>
+	<h2>Overview</h2>
+		<p>
+		PayPal's Software Developer Kit (SDK) eases the process of integrating with PayPal's Adaptive Accounts and Adaptive Payments APIs into your application by providing a thin layer of wrapper APIs. The SDK ships with core jar files containing these wrapper APIs, utility classes and also provides several command line and web samples.
+		The latest upgrades, FAQs and announcements can always be found at: <a href='http://www.x.com'>Tools for PayPal Developers</a></p>
+	<h3> Features supported</h3> 
+
+		<ul>
+			<li><b>Simple Wrapper APIs:</b> <span> The SDK provides simple APIs to consume Web Services. You can program to the APIs as though they are local classes/objects.</li> </span></li>
+		
+			<li><b>Sample projects: </b> <span> Samples (command line and web) that show how the SDK library can be utilized have been provided.</span></li>		
+
+			<li><b>Client Authentication:</b> <span> PayPal supports two types of API credentials - 
+		   <b>Three Token and Client Auth SSL certificate</b>. A merchant or application developer should have an appropriate (typically a business type)
+		   account created by signing onto PayPal site. Every API call must set up appropriate client side SSL context or provide API credentials in the form of HTTP/SOAP headers in addition to using HTTPS protocol for the transaction.
+		   The SDK does the heavy lifting of setting up appropriate headers and SSL context.   </span></li>
+
+			<li><b>Message protocol independence: </b> <span>The PayPal Platform WebService APIs supports various request and response data
+		   bindings or payload formats <b>(JSON, XML, and SOAP)</b>. When you use the APIs provided by SDK you do not need to care about the payload format.</span></li>
+
+			<li><b>JSSE provider selection: </b> <span>The SDK has been tested using IBM and Sun's Java version 1.6 and using
+			JSSE Provider classes SunJSSE and IBMJCE respectively</span></li>
+
+			<li><b>Proxy/Firewall server Support:</b> <span> The SDK can make API calls via proxy server/port specified in the paypal_sdk_client.properties file. </span></li>
+		
+			<li><b>Source code for SDK: </b> <span> The SDK is shipped with source code and an ant build script so that an end user can extend the SDK  or rebuild artifacts with new WSDLs.</span></li>
+		   
+			<li><b>  Backward compatibility for JDK 1.5: </b> <span> The SDK supports java 1.5.  It is shipped with (JAXB/JAXWS)  2.1.7 bundle. </span></li>
+
+			<li> <b>  Support for Axis2: </b> <span> The SDK supports Axis2. You can replace (JAXB/JAXWS) bundle shipped with SDK with Axis2 Jars to run the samples.
+				    Axis2 jars can be downloaded <a href="http://ws.apache.org/axis2/download.cgi">here</a></span></li>
+	</ul>
+<hr>
+		
+<a name='prerequisites'></a>
+<h2>Prerequisites</h2>
+
+<h4>Software</h4>
+<ul>
+	<li>J2SE 1.6.x development kit or higher- <a href='http://java.sun.com/javase/downloads/index.jsp'><b>Download</b></a></li>
+	<li>Apache Ant 1.6.x for rebuilding projects - <a href='http://ant.apache.org/bindownload.cgi'><b>Download</b></a></li>
+	<li>Apache Tomcat 5.x.x for running web samples - <a href='http://tomcat.apache.org/'><b>Download</b></a></li>
+	<li>OpenSSL, if using API certificates - <a href='http://www.openssl.org'><b>Download</b></a></li>
+</ul>
+
+<h4>PayPal account</h4>
+<ul>
+    <li>Live business account (PayPal real time environment) - Sign up for an account at <a href='https://www.paypal.com/'>paypal.com</a></li>
+    <li>Sandbox business account (PayPal test environment) - Sign up for an account at <a href='https://developer.paypal.com/'>developer.paypal.com</a>  
+    	<br/>(view the <a href='http://www.youtube.com/v/lDzCVtBLDu4&hl=en_US&fs=1&'><b>account creation demo</b></a> or click <a href='https://www.x.com/docs/DOC-1379'><b>here</b></a> for help)</li>
+    <li>For assistance register at <a href='http://x.com'>x.com</a></li>
+</ul>
+<hr>
+
+<a name='contents'></a>
+<h2>SDK contents</h2>
+<ul>
+	<li><b>src</b> -- Source code for the SDK</li>
+	<li><b>samples\commandLine</b> -- Pre-built command line samples</li>
+ 	<li><b>samples\JSP</b> -- Pre-built web application samples that use simple JSP pages</li>
+	<li><b>docs\JavaAPI</b> -- API documentation</li>
+</ul>
+<h3>Tested versions</h3>
+<p>This SDK has been tested on Tomcat 5.x, JBoss 5.0 and WebLogic 10.0</p>
+<hr>    
+<a name='samples'></a>
+<h2>Running the samples</h2>
+The download bundle from <a href='https://www.x.com/community/ppx/sdks'><b>x.com</b></a> comes with prebuilt sample applications that can get you quickly started on using the SDK.
+You will find both JSP based web application samples and simple command line samples in your download.
+
+<h3>Commandline Samples</h3>
+<p>To run the command line samples, go to samples/commandLine/&lt;sample name&gt; directory and type 'run' on the Windows command prompt.
+This is something you want to do first to get the feel for the SDK and wrapper APIs.</p>
+
+<h3>Web samples</h3>
+<p>
+To run the web samples on Tomcat, for instance
+<ol>
+	<li>Copy the config file from samples/JSP/*/web/config/paypal_sdk_client.properties to &lt;tomcat_home&gt;/bin/config.</li>
+	<li>Optionally, edit the paypal_sdk_client.properties file to provide correct API credentials and other config info.</li>
+	<li>Copy the war file from samples\JSP\*\dist\ to &lt;tomcat_home&gt;/webapps folder.</li>
+	<li>Start tomcat.</li>
+	<li>Open any browser and type "http://localhost:serverport/paypal_platform_AP/samples/" for AdaptivePayment samples OR "http://localhost:serverport/paypal_platform_AA/samples/" for AdaptiveAccount samples.</li>
+</ol>
+</p>
+
+<hr>
+<a name='using'></a>
+<h2>Integrating the SDK</h2>
+	     <p> You can write your own applications using the SDK jar. To do this,
+	     <ol>
+	     	<li>Copy the supplied/generated SDK jar files in &lt;SDK root&gt;/lib directory (paypal_platform_stubs*.jar and paypal_platform_base*.jar ) to your project and include them in the project classpath.</li>
+	     	<li>Make sure that the paypal_sdk_client.properties is made available to the application as detailed in the <a href='#configuration'><b>configuration section.</b></a></li>
+	     	<li>Create a new AdaptiveAccounts/AdaptivePayments object.</li>
+	     	<li>For each API method, create a "Request object" and invoke the corresponding wrapper method as shown below. </li>
+	     	<li>You can refer to javadocs (under docs\JavaAPI folder of the SDK) to know all supported APIs. </li>
+	     </ol> 
+		 </p>
+<h3>Adaptive Accounts Command Line samples - Programming Model</h3>
+	<pre>
+
+	//<b>CreateAccount </b>
+
+	CreateAccountRequest accReq = new CreateAccountRequest();
+	accReq.setRequestEnvelope(en);
+	acl.setDeviceId("pudurSDK");
+	acl.setIpAddress("127.0.0.1");
+	acl.setApplicationId("APP-1JE4291016473214C");
+	accReq.setClientDetails(acl);
+	accReq.setAccountType("PERSONAL");
+	AddressType address = new AddressType();
+	address.setCity("Austin");
+	address.setCountryCode("US");
+	address.setLine1("1968 Ape Way");
+	address.setLine2("Apt 123");
+	address.setPostalCode("78750");
+	address.setState("TX");
+	accReq.setAddress(address);
+	accReq.setCitizenshipCountryCode("US");
+	accReq.setContactPhoneNumber("512-691-4160");
+	accReq.setCurrencyCode("USD");
+	accReq.setPreferredLanguageCode("en_US");
+	XMLGregorianCalendar dob = DateUtil.getDate("1958-02-18");
+	accReq.setDateOfBirth(dob);
+	NameType name = new NameType();
+	name.setFirstName("John");
+	name.setMiddleName("S.");
+	name.setLastName("Donahoe");
+	name.setSalutation("Mr.");
+	accReq.setName(name);
+	accReq.setNotificationURL("http://stranger.paypal.com/cgi-bin/ipntest.cgi");
+	accReq.setPartnerField1("partnerField1");
+	accReq.setPartnerField2("partnerField2");
+	accReq.setPartnerField3("partnerField3");
+	accReq.setPartnerField4("partnerField4");
+	accReq.setPartnerField5("partnerField5");
+
+	adaptiveaccounts.AdaptiveAccounts aa = new adaptiveaccounts.AdaptiveAccounts();
+	CreateAccountResponse resp  = aa.createAccount(accReq);
+	System.out.println( "***** CreateAccount: Account Key: " + resp.getCreateAccountKey() );
+	
+	</pre>
+	</p>
+<hr>	
+
+	<a name='logging'></a>
+    <h2>Logging</h2>
+    <p>The SDK implements logging via the Java logging framework. All SOAP request/response messages and other application messages are logged to <b>paypal_sdk.log</b> by default. 
+    This can be changed using the log4j.properties file in WEB-INF/classes (for web samples) or the SDKlogging.properties (for commandline samples)</p>
+<hr>
+	<a name='configuration'></a>
+	<h2>Property files and configuration</h2>
+	  <p>The SDK uses a property file named <b> paypal_sdk_client.properties</b>. Please see the sample file in the SDK to learn more about the configuration properties. The property file can be either part of the SDK package/jar file (paypal_platform_base.jar) or
+	  external to it as explained below.  </p>
+	  <ol>
+	    <li>
+	      <b>Default location:</b>. <p>SDK will try to load the properties from the default location <b>config/paypal_sdk_client.properties.</b>    
+	       On Tomcat, for example, the default location will be tomcat_root_dir/bin/. The default location can be changed by editing CallerServices.java file and recompiling it</br>
+	       <pre>
+	        private static String propsLocation = "config/paypal_sdk_client.properties";</pre>	       
+	      </li>
+	      <li>
+		  <b>Loading from SDK jar or classpath</b><p>
+		   If you want the property file to be part of the paypal_platform_base_AA.jar OR paypal_platform_base_AP.jar,
+		   you can do so by adding the files in common.com.paypal.platform.sdk.resources package and recompiling the SDK jar files.</p>
+	      </li>
+	      <li>
+	     <b> Using different constructors of the SDK Wrapper APIs:</b><p>
+	      You can also pass file names of the property files or  references to Property objects as shown below. The properties set or configured this way
+	      will override the properties set using System properties or using the default property file or using part of the sdk jar/package.
+	      
+	      	<pre>
+Method #1: AdaptiveAccounts aa = new AdaptiveAccounts(); //using default property files.
+Method #2: AdaptivePayments aa = new AdaptiveAccounts(clientProperty); // passing an object reference of Type Property
+Method #3: AdaptiveAccounts aa = new AdaptiveAccounts(clientFileName); // passing the property file's name as a String
+			</pre>
+			</p>
+	      </li>
+      </ol>
+      
+	      
+
+	 <p>
+	Please note these configurations are typically one time setup you would do for your application, so it is recommended you try to
+	use either the default locations for property files or VM arguments. This way you can avoid passing the property file names or
+	Property object references every time you create webservice wrapper objects. If you use them as part of the SDK jar,
+	then whenever a property needs to be changed, the SDK must be recompiled, re-tested, and redeployed again.
+
+	If the credentials are stored encrypted and you want to read them and decrypt them using your own logic then the method
+	#3 given above can be used to supply the properties.
+	It is highly recommended you protect these files with right access permissions. </p>
+</p>
+<hr>
+	<a name='building'></a>
+	<h2>Building the SDK</h2>
+    <p> The SDK bundle includes pre-built JAR files and samples (WARs/ standalone Java files) that work out of the box without any
+        configuration. The default configuration (endpoint and api credentials) points to the sandbox environment. If you need to rebuild the SDK (typically this step is not needed) or point to live production environment, follow these steps.
+        <ul>
+        	<li>Open the build.properties file and change the APwsdlLocation/AAwsdlLocation property to point to the correct URL (https:/svcs.paypal.com/AdaptivePayments/Pay?wsdl OR https:/svcs.paypal.com/AdaptiveAccounts/?wsdl for live environment) </li>
+			<li>Run the build.xml ant script - Open the command prompt and navigate to the SDK root. Type <b>ant</b> to generate proxy objects and jar files.</li>
+			<li>Be sure to change the API_BASE_ENDPOINT property and API credentials in paypal_sdk_client.properties file to https:/svcs.paypal.com before using the jar files against live.</li>        	
+        </ul>        
+     </p>
+<hr>
+<a name='troubleshooting'></a>
+<h2>Troubleshooting tips</h2>
+<ul>
+<li>Server Endorsement. </li>
+ <p>
+    As the SDK is shipped with (JAXB/JAXWS) 2.1.7 , some servers complain about (JAXB/JAXWS) version if they provide their own (JAXB/JAXWS) bundle,
+    In that case  you need to copy (jaxb-api.jar , jaxws-api.jar) provided in lib directory of SDK into the endorsed directory of the particular
+    server to override the default Webservice jars.
+    <pre>
+    eg:  In TOMCAT it is at "%TOMCAT_HOME%\common\endorsed". In JBOSS it is at "%JBOSS_HOME%\lib\endorsed".</pre>
+ </p>
+<li>Mixed version of JAXB jars</li>
+
+<p>Since the SDK uses JAXB/JAXWS 2.1.7 libraries, any older version of JAXB jar files in the classpath
+may cause issues. It is recommended that SDK is made available with the specified JAXB version.
+Successful running of the command line samples is a good indication that your environment is good. Sometimes you
+may see the API call fail and that perhaps is due to invalid data used for the API call. For example, if the start date
+of the preapproval API is in past, then the preapproval API call will fail. Once you correct the start date the sample
+code should work.</p>
+
+<li>Endpoint is incorrect</li>
+<p> When you specify a non-existent endpoint, the SDK will make a request to the endpoint and no response will come back. You will get the following Exception. Please correct the endpoint and try again.
+<pre>
+java.lang.Exception: javax.xml.ws.WebServiceException: javax.xml.soap.SOAPException: javax.xml.stream.XMLStreamException
+: ParseError at [row,col]:[1,327]
+Message: XML document structures must start and end within the same entity.
+</pre>
+
+<li>Building axis2 support</li>
+		 <p>To add axis2 support, replace the JAXB/JAXWS bundle included in the SDK with Axis2 Jars. Use the following jars from <a href='http://ws.apache.org/axis2/'>axis</a> to build the SDK with axis2 support</p>
+				   <ul>
+					   <li>neethi-2.0.4.jar
+					   <li>XmlSchema-1.4.3.jar
+					   <li>commons-httpclient-3.1.jar
+					   <li>woden-api-1.0M8.jar
+					   <li>woden-impl-dom-1.0M8.jar
+					   <li>axiom-api-1.2.8.jar
+					   <li>axiom-impl-1.2.8.jar
+					   <li>wsdl4j-1.6.2.jar
+					   <li>mail-1.4.jar
+					   <li>jaxb-api-2.1.jar
+					   <li>jaxb-impl-2.1.7.jar
+					   <li>xml-resolver-1.2.jar
+					   <li>axis2-kernel-1.5.1.jar
+					   <li>axis2-transport-local-1.5.1.jar
+					   <li>axis2-transport-http-1.5.1.jar
+					   <li>axis2-metadata-1.5.1.jar
+					   <li>axis2-jaxws-1.5.1.jar
+					   <li>geronimo-stax-api_1.0_spec-1.0.1.jar
+					   <li>geronimo-ws-metadata_2.0_spec-1.1.2.jar
+					   <li>wstx-asl-3.2.4.jar
+				   </ul>
+
+</ul>
+
+
+<hr>
+<a name='documentation'></a>
+<h2>Documentation and support</h2>
+<ul>
+	<li><a href='https://www.x.com'>PayPal developer Center</a></li>
+	<li><a href='http://www.paypal.com/mts'>Technical Support</a></li>
+</ul>
+<hr>
+
+<a name='licensing'></a>
+<h2>Licensing</h2>
+<p>Read the <a href='licenses/LICENSE.txt'>license</a> file for important legal information regarding the PayPal
+SDK. There are important points you must consider when choosing to bundle this SDK within your application.</p>
+<br/>Copyright (c) 2009 PayPal, Inc.
+</body>
+</html>

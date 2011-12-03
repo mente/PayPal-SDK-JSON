@@ -1,0 +1,1 @@
+Contains template files used at the time of SDK bundle generation

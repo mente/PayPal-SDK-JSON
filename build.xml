@@ -1,0 +1,827 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="paypal_java_sdk" default="help" basedir=".">
+	<description>
+		This is the build script for the PayPal Platform Java SDK.
+	</description>
+	<available property="jdk1.5" classname="java.lang.CharSequence"/>
+	<available property="jdk1.6" classname="java.lang.Readable"/>
+
+	<property file="build.properties" />
+	<property environment="env" />
+	<property name="buildtemp" value="${env.TEMP}/platformsdkbuild" />
+
+	<property name="classes" value="${buildtemp}/classes" />
+	<property name="classes.aa" value="${classes}/aa" />
+	<property name="classes.ap" value="${classes}/ap" />
+	<property name="classes.p" value="${classes}/p" />
+	<property name="samples" value="${buildtemp}/samples" />
+
+	<property name="stubs.dir" value="${buildtemp}/stubs" />
+	<property name="stubs.src" value="${stubs.dir}/src" />
+	<property name="stubs.classes" value="${stubs.dir}/classes" />
+
+	<property name="stubs.aa.dir" value="${buildtemp}/stubs/aa" />
+	<property name="stubs.aa.src" value="${stubs.aa.dir}/src" />
+	<property name="stubs.aa.classes" value="${stubs.aa.dir}/classes" />
+
+	<property name="stubs.ap.dir" value="${buildtemp}/stubs/ap" />
+	<property name="stubs.ap.src" value="${stubs.ap.dir}/src" />
+	<property name="stubs.ap.classes" value="${stubs.ap.dir}/classes" />
+
+	<property name="stubs.p.dir" value="${buildtemp}/stubs/p" />
+	<property name="stubs.p.src" value="${stubs.p.dir}/src" />
+	<property name="stubs.p.classes" value="${stubs.p.dir}/classes" />
+
+	<property name="dist.dir" value="${buildtemp}/dist" />
+
+	<property name="dist.soap.filename" value="${dist.dir}/${Platform_java_soap_filename}.zip" />
+	<property name="dist.soap.aa.filename" value="${dist.dir}/${Platform_java_soap_aa_filename}.zip" />
+	<property name="dist.soap.ap.filename" value="${dist.dir}/${Platform_java_soap_ap_filename}.zip" />
+	<property name="platform_java_soap_sdk_tar" value="${dist.dir}/${Platform_java_soap_filename}.tar" />
+	<property name="platform_java_soap_aa_sdk_tar" value="${dist.dir}/${Platform_java_soap_aa_filename}.tar" />
+	<property name="platform_java_soap_ap_sdk_tar" value="${dist.dir}/${Platform_java_soap_ap_filename}.tar" />
+	<property name="dist.soap.p.filename" value="${dist.dir}/${Platform_java_soap_p_filename}.zip" />
+	<property name="platform_java_soap_sdk_p_tar" value="${dist.dir}/${Platform_java_soap_p_filename}.tar" />
+
+	<!--<property name="platform_java_soap_ap_sdk_tar" value="${dist.dir}/${Platform_java_soap_ap_filename}.tar" />-->
+	<available file="${src.dir}/wsdl/${wsdl}" property="wsdl.exists" />
+
+
+
+	<dirset dir="">
+	</dirset>
+
+	<!--<path id="extJars.classpath">
+		<fileset dir="${ext.jars}">
+		</fileset>
+	</path>-->
+
+	<!--<path id="soap.classpath">
+		<fileset dir="${lib.dir}">
+		</fileset>
+	</path>-->
+
+	<path id="base.classpath">
+		<fileset dir="${lib.dir}">
+		</fileset>
+	</path>
+
+
+	<path id="junit.classpath">
+		<path refid="base.classpath" />
+		<fileset dir="${lib.dir}">
+			<include name="junit.jar" />
+		</fileset>
+	</path>
+
+
+	<!-- Clean up everything -->
+	<target name="clean" depends="clean-base, clean-stubs, clean-jar, clean-doc, clean-dist" />
+	<target name="clean-doc">
+		<delete dir="${javadoc.dir}" failonerror="false" />
+	</target>
+	<target name="clean-base">
+		<delete dir="${classes}" failonerror="false" />
+	</target>
+	<target name="clean-lib">
+		<!--	<delete dir="${lib.dir}" />
+		<mkdir dir="${lib.dir}" /> -->
+		<delete>
+			<fileset dir="${lib.dir}">
+				<include name="**_AA.jar"/>
+				<include name="**_AP.jar"/>
+				<include name="**_samples.jar"/>
+				<include name="**_Permission.jar"/>
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="clean-stubs">
+		<delete dir="${stubs.dir}" failonerror="false" />
+	</target>
+	<target name="clean-stubs-aa">
+		<delete dir="${stubs.aa.dir}" failonerror="false" />
+	</target>
+	<target name="clean-stubs-ap">
+		<delete dir="${stubs.ap.dir}" failonerror="false" />
+	</target>
+	<target name="clean-stubs-p">
+		<delete dir="${stubs.p.dir}" failonerror="false" />
+	</target>
+	<patternset id="jars.patternset">
+		<includesfile name="${base.jarname}" />
+		<includesfile name="${stubs.jarname}" />
+		<includesfile name="${junit.jarname}" />
+	</patternset>
+	<fileset dir="${lib.dir}" id="jar.files">
+		<patternset refid="jars.patternset">
+		</patternset>
+	</fileset>
+	<target name="clean-jar">
+		<delete quiet="true">
+			<fileset refid="jar.files" />
+		</delete>
+	</target>
+
+	<patternset id="base.patternset">
+		<exclude name="**/junit/**" />
+	</patternset>
+
+
+	<!--<target name="common-base" depends="base_aa,base_ap,base_p">
+	</target>-->
+
+	<patternset id="dist.fileset">
+		<include name="build.properties" />
+		<include name="build.xml" />
+		<include name=".classpath" />
+		<include name="templates/**" />
+	</patternset>
+
+	<patternset id="docs.aa.patternset">
+		<include name="docs/ChangeLog_AA.txt" />
+		<include name="docs/JavaAPI/**" />
+		<include name="README.html" />
+	</patternset>
+	<patternset id="docs.ap.patternset">
+		<include name="docs/ChangeLog_AP.txt" />
+		<include name="docs/JavaAPI/**" />
+		<include name="README.html" />
+	</patternset>
+	<patternset id="docs.p.patternset">
+		<include name="docs/ChangeLog_P.txt" />
+		<include name="docs/JavaAPI/**" />
+		<include name="README_Permissions.html" />
+	</patternset>
+	<patternset id="docs.aa.ap.patternset">
+		<include name="docs/ChangeLog_AA.txt" />
+		<include name="docs/ChangeLog_AP.txt" />
+		<exclude name="docs/ChangeLog_P.txt"/>
+		<include name="docs/JavaAPI/**" />
+		<include name="README.html" />
+	</patternset>
+
+	<patternset id="samples.ap.patternset">
+		<include name="samples/commandLine/commandLine_AP/**" />
+		<include name="samples/JSP/adaptivepayments/**" />
+	</patternset>
+
+	<target name="samples" depends="clean_samples">
+		<mkdir dir="${samples}" />
+		<javac destdir="${samples}" source="1.5" target="1.5" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<classpath refid="base.classpath" />
+			<src path="${samples_src.dir}" />
+			<patternset refid="base.patternset" />
+		</javac>
+		<mkdir dir="${lib.dir}" />
+		<jar destfile="${lib.dir}/${samples.jarname}">
+			<fileset dir="${samples}">
+				<patternset refid="base.patternset" />
+			</fileset>
+		</jar>
+	</target>
+	<!--<target name="base" depends="stubs" description="build base sdk jar file">
+		<antcall target="common-base">
+			<param name="soap" value="true" />
+		</antcall>
+	</target>-->
+	<target name="base" depends="stubs,base_aa,base_ap,base_p" description="build base sdk jar file"/>
+
+	<target name="stubs" depends="stubs_ap,stubs_aa,stubs_p" description="Generate client proxy objects from WSDLs" />
+
+	<target name="clean-dist">
+		<delete dir="${dist.dir}" failonerror="false" />
+	</target>
+
+	<target name="clean_samples">
+		<delete dir="${samples}" failonerror="false" />
+	</target>
+
+
+	<!--<path id="soap.ap.classpath">
+		<fileset dir="${lib.dir}">
+		</fileset>
+	</path>
+	<path id="soap.aa.classpath">
+		<fileset dir="${lib.dir}">
+		</fileset>
+	</path>-->
+
+
+	<target name="clean_javadoc">
+		<delete dir="${javadoc.api}" />
+	</target>
+
+	<target name="jsp_aa">
+		<ant antfile="build.xml" dir="samples/JSP/adaptiveaccounts/" target="SoapSamples">
+		</ant>
+	</target>
+
+	<target name="jsp_ap">
+		<ant antfile="build.xml" dir="samples/JSP/adaptivepayments/" target="SoapSamples">
+		</ant>
+	</target>
+
+	<target name="jsp_p">
+		<ant antfile="build.xml" dir="samples/JSP/permissions/" target="SoapSamples">
+		</ant>
+	</target>
+
+	<target name="doc_all" depends="base,clean_javadoc" description="generate javadoc">
+		<mkdir dir="${javadoc.api}" />
+		<javadoc destdir="${javadoc.api}" classpathref="base.classpath" use="true" windowtitle="PayPal Platform SDK v${release.version}" doctitle="PayPal Platform SDK v${release.version}" header="PayPal Platform SDK v${release.version}" bottom="Copyright 2009 PayPal, Inc. All Rights Reserved." private="no" classpath=".;lib/paypal_platform_stubs_AA.jar;lib/paypal_platform_stubs_AP.jar;lib/paypal_platform_base_AA.jar;lib/paypal_platform_base_AP.jar;lib/paypal_platform_stubs_P.jar;lib/paypal_platform_base_P.jar" breakiterator="yes">
+			<packageset dir="${stubs.aa.src}" defaultexcludes="yes">
+				<include name="com/paypal/svcs/**" />
+				<include name="com/paypal/svcs/types/**" />
+			</packageset>
+			<packageset dir="${stubs.ap.src}" defaultexcludes="yes">
+				<include name="com/paypal/svcs/**" />
+				<include name="com/paypal/svcs/types/**" />
+			</packageset>
+			<packageset dir="${stubs.p.src}" defaultexcludes="yes">
+				<include name="com/paypal/svcs/**" />
+				<include name="com/paypal/svcs/types/**" />
+			</packageset>
+			<packageset dir="${src.dir}" defaultexcludes="yes">
+				<include name="adaptiveaccounts/**" />
+				<include name="adaptivepayments/**" />
+				<include name="permissions/**" />
+				<include name="common/com/paypal/platform/sdk/**" />
+				<exclude name="**/**/nvp/**" />
+				<exclude name="**/**/nvp/" />
+				<exclude name="src/**/**/NVP*.java" />
+				<exclude name="**/util/TestConnection.java" />
+				<exclude name="**/junit/**" />
+			</packageset>
+			<group title="PayPal Platform SDK" packages="common.com.paypal.sdk.*" />
+			<group title="PayPal Platform Client Stubs" packages="com.paypal.svcs.*" />
+		</javadoc>
+	</target>
+
+	<target name="doc_aa_ap" depends="base_aa,base_ap,clean_javadoc" description="generate javadoc">
+		<mkdir dir="${javadoc.api}" />
+		<javadoc destdir="${javadoc.api}" classpathref="base.classpath" use="true" windowtitle="PayPal Platform SDK v${release.version}" doctitle="PayPal Platform SDK v${release.version}" header="PayPal Platform SDK v${release.version}" bottom="Copyright 2009 PayPal, Inc. All Rights Reserved." private="no" classpath=".;lib/paypal_platform_stubs_AA.jar;lib/paypal_platform_stubs_AP.jar;lib/paypal_platform_base_AA.jar;lib/paypal_platform_base_AP.jar;lib/paypal_platform_stubs_P.jar;lib/paypal_platform_base_P.jar" breakiterator="yes">
+			<packageset dir="${stubs.aa.src}" defaultexcludes="yes">
+				<include name="com/paypal/svcs/**" />
+				<include name="com/paypal/svcs/types/**" />
+			</packageset>
+			<packageset dir="${stubs.ap.src}" defaultexcludes="yes">
+				<include name="com/paypal/svcs/**" />
+				<include name="com/paypal/svcs/types/**" />
+			</packageset>
+			<packageset dir="${src.dir}" defaultexcludes="yes">
+				<include name="adaptiveaccounts/**" />
+				<include name="adaptivepayments/**" />
+				<exclude name="permissions/**" />
+				<include name="common/com/paypal/platform/sdk/**" />
+				<exclude name="**/**/nvp/**" />
+				<exclude name="**/**/nvp/" />
+				<exclude name="src/**/**/NVP*.java" />
+				<exclude name="**/util/TestConnection.java" />
+				<exclude name="**/junit/**" />
+			</packageset>
+			<group title="PayPal Platform SDK" packages="common.com.paypal.sdk.*" />
+			<group title="PayPal Platform Client Stubs" packages="com.paypal.svcs.*" />
+		</javadoc>
+	</target>
+
+	<target name="doc_ap" depends="base_ap,clean_javadoc" description="generate javadoc">
+		<mkdir dir="${javadoc.api}" />
+		<javadoc destdir="${javadoc.api}" classpathref="base.classpath" use="true" windowtitle="PayPal Platform SDK AP v${release.version}" doctitle="PayPal Platform SDK AP v${release.version}" header="PayPal Platform SDK AP v${release.version}" bottom="Copyright 2009 PayPal, Inc. All Rights Reserved." private="no" classpath=".;lib/paypal_platform_stubs_AP.jar;lib/paypal_platform_base_AP.jar" breakiterator="yes">
+			<packageset dir="${stubs.ap.src}" defaultexcludes="yes">
+				<include name="com/paypal/svcs/*" />
+				<include name="com/paypal/svcs/types/*" />
+			</packageset>
+			<packageset dir="${src.dir}" defaultexcludes="yes">
+				<include name="adaptivepayments/**" />
+				<exclude name="adaptiveaccounts/**" />
+				<exclude name="permissions/**" />
+				<include name="common/com/paypal/platform/sdk/**" />
+				<exclude name="**/**/nvp/**" />
+				<exclude name="**/**/nvp/" />
+				<exclude name="src/**/**/NVP*.java" />
+				<exclude name="**/util/TestConnection.java" />
+				<exclude name="**/junit/**" />
+			</packageset>
+			<group title="PayPal Platform AP SDK" packages="common.com.paypal.sdk.*" />
+			<group title="PayPal Platform Client AP Stubs" packages="com.paypal.svcs.*" />
+		</javadoc>
+	</target>
+	<target name="doc_aa" depends="base_aa,clean_javadoc" description="generate javadoc">
+		<mkdir dir="${javadoc.api}" />
+		<javadoc destdir="${javadoc.api}" classpathref="base.classpath" use="true" windowtitle="PayPal Platform AA SDK  v${release.version}" doctitle="PayPal Platform AA SDK v${release.version}" header="PayPal Platform AA SDK v${release.version}" bottom="Copyright 2009 PayPal, Inc. All Rights Reserved." private="no" classpath=".;lib/paypal_platform_stubs_AA.jar;lib/paypal_platform_base_AA.jar" breakiterator="yes">
+			<packageset dir="${stubs.aa.src}" defaultexcludes="yes">
+				<include name="com/paypal/svcs/*" />
+				<include name="com/paypal/svcs/types/*" />
+			</packageset>
+
+			<packageset dir="${src.dir}" defaultexcludes="yes">
+				<include name="adaptiveaccounts/**" />
+				<exclude name="adaptivepayments/**" />
+				<exclude name="permissions/**" />
+				<include name="common/com/paypal/platform/sdk/**" />
+				<exclude name="**/**/nvp/**" />
+				<exclude name="**/**/nvp/" />
+				<exclude name="src/**/**/NVP*.java" />
+				<exclude name="**/util/TestConnection.java" />
+				<exclude name="**/junit/**" />
+			</packageset>
+			<group title="PayPal Platform AA SDK" packages="common.com.paypal.sdk.*" />
+			<group title="PayPal Platform Client AA Stubs" packages="com.paypal.svcs.*" />
+		</javadoc>
+	</target>
+	<target name="doc_p" depends="base_p,clean_javadoc" description="generate javadoc">
+		<mkdir dir="${javadoc.api}" />
+		<javadoc destdir="${javadoc.api}" classpathref="base.classpath" use="true" windowtitle="PayPal Platform Permission SDK  v${release.version}" doctitle="PayPal Platform Permission SDK v${release.version}" header="PayPal Platform Permission SDK v${release.version}" bottom="Copyright 2009 PayPal, Inc. All Rights Reserved." private="no" classpath=".;lib/paypal_platform_stubs_P.jar;lib/paypal_platform_base_P.jar" breakiterator="yes">
+			<packageset dir="${stubs.p.src}" defaultexcludes="yes">
+				<include name="com/paypal/svcs/*" />
+				<include name="com/paypal/svcs/types/*" />
+			</packageset>
+
+			<packageset dir="${src.dir}" defaultexcludes="yes">
+				<include name="permissions/**" />
+				<exclude name="adaptiveaccounts/**" />
+				<exclude name="adaptivepayments/**" />
+				<include name="common/com/paypal/platform/sdk/**" />
+				<exclude name="**/**/nvp/**" />
+				<exclude name="**/**/nvp/" />
+				<exclude name="src/**/**/NVP*.java" />
+				<exclude name="**/util/TestConnection.java" />
+				<exclude name="**/junit/**" />
+			</packageset>
+			<group title="PayPal Platform Permission SDK" packages="common.com.paypal.sdk.*" />
+			<group title="PayPal Platform Client Permission Stubs" packages="com.paypal.svcs.*" />
+		</javadoc>
+	</target>
+
+	<!--	<target name="stubs_ap" depends="clean-stubs-ap" description="Generate client proxy objects from WSDLs">
+		<mkdir dir="${stubs.ap.src}" />
+		<mkdir dir="${stubs.ap.classes}" />
+		<property name="script_name" value="wsimport.exe" />
+		<exec executable="wsimport" failonerror="true">
+			<arg line="-d ${stubs.ap.classes} -s ${stubs.ap.src} ${APwsdlLocation}" />
+		</exec>
+
+		<jar destfile="${lib.dir}/${stubsAP.jarname}" basedir="${stubs.ap.classes}" />
+		<jar destfile="${lib.dir}/${stubsAP.src.jarname}" basedir="${stubs.ap.src}" />
+	</target>
+
+	<target name="stubs_aa" depends="clean-stubs-ap" description="Generate client proxy objects from WSDLs">
+		<mkdir dir="${stubs.aa.src}" />
+		<mkdir dir="${stubs.aa.classes}" />
+		<property name="script_name" value="wsimport.exe" />
+		<exec executable="wsimport" failonerror="true">
+			<arg line="-d ${stubs.aa.classes} -s ${stubs.aa.src} ${AAwsdlLocation}" />
+		</exec>
+
+		<jar destfile="${lib.dir}/${stubsAA.jarname}" basedir="${stubs.aa.classes}" />
+		<jar destfile="${lib.dir}/${stubsAA.src.jarname}" basedir="${stubs.aa.src}" />
+	</target> -->
+
+	<target name="stubs_aa" depends="clean-stubs-aa">
+		<mkdir dir="${stubs.aa.src}" />
+		<mkdir dir="${stubs.aa.classes}" />
+		<taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
+			<classpath refid="base.classpath" />
+		</taskdef>
+		<echo message="Running wsimport" />
+
+		<!--<wsimport   keep="false" 	sourcedestdir="${stubs.aa.src}"
+					            destdir="${stubs.aa.classes}"
+						        wsdl="${AAwsdlLocation}"/> -->
+		<wsimport keep="true" sourcedestdir="${stubs.aa.src}" wsdl="${AAwsdlLocation}" />
+
+		<javac srcdir="${stubs.aa.src}" destdir="${stubs.aa.classes}" source="1.5" target="1.5" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<classpath refid="base.classpath" />
+		</javac>
+
+		<jar destfile="${lib.dir}/${stubsAA.jarname}" basedir="${stubs.aa.classes}" />
+		<jar destfile="${lib.dir}/${stubsAA.src.jarname}" basedir="${stubs.aa.src}" />
+		<!--<copy todir="${lib.dir}" >
+				<fileset dir="${ext.jars}" />
+			</copy>-->
+	</target>
+
+	<target name="stubs_ap" depends="clean-stubs-ap">
+		<mkdir dir="${stubs.ap.src}" />
+		<mkdir dir="${stubs.ap.classes}" />
+		<taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
+			<classpath refid="base.classpath" />
+		</taskdef>
+		<echo message="Running wsimport" />
+
+		<!--<wsimport   keep="true"
+						        	sourcedestdir="${stubs.ap.src}"
+						            destdir="${stubs.ap.classes}" 
+							        wsdl="${APwsdlLocation}"/> -->
+		<wsimport keep="true" sourcedestdir="${stubs.ap.src}" wsdl="${APwsdlLocation}" />
+
+		<javac srcdir="${stubs.ap.src}" destdir="${stubs.ap.classes}" source="1.5" target="1.5" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<classpath refid="base.classpath" />
+		</javac>
+
+		<jar destfile="${lib.dir}/${stubsAP.jarname}" basedir="${stubs.ap.classes}" />
+		<jar destfile="${lib.dir}/${stubsAP.src.jarname}" basedir="${stubs.ap.src}" />
+		<!--<copy todir="${lib.dir}" >
+					<fileset dir="${ext.jars}" />
+				</copy>-->
+	</target>
+
+	<target name="stubs_p" depends="clean-stubs-p">
+		<mkdir dir="${stubs.p.src}" />
+		<mkdir dir="${stubs.p.classes}" />
+		<taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
+			<classpath refid="base.classpath" />
+		</taskdef>
+		<echo message="Running wsimport" />
+
+		<!--<wsimport   keep="true"
+						        	sourcedestdir="${stubs.p.src}"
+						            destdir="${stubs.p.classes}"
+							        wsdl="${PermissionWsdlLocation}"/> -->
+
+		<wsimport keep="true" sourcedestdir="${stubs.p.src}" wsdl="${PermissionWsdlLocation}" />
+
+		<javac srcdir="${stubs.p.src}" destdir="${stubs.p.classes}" source="1.5" target="1.5" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<classpath refid="base.classpath" />
+		</javac>
+
+		<jar destfile="${lib.dir}/${stubsP.jarname}" basedir="${stubs.p.classes}" />
+		<jar destfile="${lib.dir}/${stubsP.src.jarname}" basedir="${stubs.p.src}" />
+		<!--<copy todir="${lib.dir}" >
+					<fileset dir="${ext.jars}" />
+				</copy>-->
+	</target>
+
+	<target name="base_ap" depends="clean-base">
+		<mkdir dir="${classes.ap}" />
+		<javac destdir="${classes.ap}" source="1.5" target="1.5" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<classpath refid="base.classpath" />
+			<src path="${src.dir}" />
+			<patternset refid="base.patternset" />
+			<!--<exclude name="**/util/converters/*" if="nvp" />-->
+			<exclude name="adaptiveaccounts/**" />
+			<exclude name="permissions/**" />
+		</javac>
+		<mkdir dir="${lib.dir}" />
+		<jar destfile="${lib.dir}/${baseAP.jarname}">
+			<fileset dir="${classes.ap}">
+				<patternset refid="base.patternset" />
+			</fileset>
+			<fileset dir="${src.dir}" includes="**/*.properties">
+			</fileset>
+		</jar>
+		<jar destfile="${lib.dir}/${baseAP.src.jarname}" basedir="${src.dir}">
+			<exclude name="adaptiveaccounts/**" />
+			<exclude name="permissions/**" />
+		</jar>
+	</target>
+
+	<target name="base_aa" depends="clean-base">
+		<mkdir dir="${classes.aa}" />
+		<javac destdir="${classes.aa}" source="1.5" target="1.5" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<classpath refid="base.classpath" />
+			<src path="${src.dir}" />
+			<patternset refid="base.patternset" />
+			<!--<exclude name="**/util/converters/*" if="nvp" />-->
+			<exclude name="adaptivepayments/**" />
+			<exclude name="permissions/**" />
+		</javac>
+		<mkdir dir="${lib.dir}" />
+		<jar destfile="${lib.dir}/${baseAA.jarname}">
+			<fileset dir="${classes.aa}">
+				<patternset refid="base.patternset" />
+			</fileset>
+			<fileset dir="${src.dir}" includes="**/*.properties">
+			</fileset>
+		</jar>
+		<jar destfile="${lib.dir}/${baseAA.src.jarname}">
+			<fileset dir="${src.dir}">
+				<exclude name="adaptivepayments/**" />
+				<exclude name="permissions/**" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="base_p" depends="clean-base">
+		<mkdir dir="${classes.p}" />
+		<javac destdir="${classes.p}" source="1.5" target="1.5" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<classpath refid="base.classpath" />
+			<src path="${src.dir}" />
+			<patternset refid="base.patternset" />
+			<!--<exclude name="**/util/converters/*" if="nvp" />-->
+			<exclude name="adaptivepayments/**" />
+			<exclude name="adaptiveaccounts/**" />
+		</javac>
+		<mkdir dir="${lib.dir}" />
+		<jar destfile="${lib.dir}/${baseP.jarname}">
+			<fileset dir="${classes.p}">
+				<patternset refid="base.patternset" />
+			</fileset>
+			<fileset dir="${src.dir}" includes="**/*.properties">
+			</fileset>
+		</jar>
+		<jar destfile="${lib.dir}/${baseP.src.jarname}">
+			<fileset dir="${src.dir}">
+				<exclude name="adaptivepayments/**" />
+				<exclude name="adaptiveaccounts/**" />
+			</fileset>
+		</jar>
+	</target>
+
+	<patternset id="samples.ap.patternset">
+		<include name="samples/commandLine/commandLine_AP/**" />
+		<include name="samples/JSP/adaptivepayments/**" />
+		<include name="samples/src/**" />
+	</patternset>
+
+	<patternset id="samples.aa.patternset">
+		<include name="samples/commandLine/commandLine_AA/**" />
+		<include name="samples/JSP/adaptiveaccounts/**" />
+		<include name="samples/src/**" />
+	</patternset>
+
+	<patternset id="samples.p.patternset">
+		<include name="samples/JSP/permissions/**" />
+	</patternset>
+
+	<patternset id="exclude.p.patternset">
+		<exclude name="samples/JSP/permissions/**" />
+		<exclude name="src/permissions/**" />
+	</patternset>
+
+	<target name="ide_templates">
+		<copy tofile="${buildtemp}/templates/.project" file="templates/.project" overwrite="true">
+			<filterchain id="replace.filter">
+				<replacetokens>
+					<token key="projectName" value="${projectname}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+	</target>
+
+
+	<!--******************************************************************************-->
+	<!-- target for both AdaptiveAccount(AA) and AdaptivePayment(AP) and Permission(P)-->
+	<!--******************************************************************************-->
+
+	<target name="build_aa_ap" depends="clean-dist,clean-lib,stubs_aa,stubs_ap,base_aa,base_ap, samples,jsp_aa,jsp_ap, doc_aa_ap">
+		<mkdir dir="${dist.dir}" />
+		<antcall target="ide_templates">
+			<param name="projectname" value="Platform_SDK_SOAP" />
+		</antcall>
+
+		<zip zipfile="${dist.soap.filename}" update="true">
+			<zipfileset dir="." includes="src/** cert/** docs/** licenses/** lib/**  wsdl/** samples/**" >
+				<patternset refid="dist.fileset" />
+				<patternset refid="docs.aa.ap.patternset" />
+				<patternset refid="exclude.p.patternset" />
+				<include name="*.txt" />
+				<!--<include name="BuildAA/**" />
+				<include name="BuildAP/**" />-->
+				<include name="wsdl/AdaptiveAccounts.wsdl"/>
+				<include name="wsdl/AdaptivePayments.wsdl"/>
+				<exclude name="wsdl/Permissions.wsdl"/>
+			</zipfileset>
+			<zipfileset dir="${buildtemp}/templates/"/>
+		</zip>
+		<copy todir=".">
+			<fileset dir="${env.TEMP}/platformsdkbuild/dist" />
+		</copy>
+	</target>
+	<target name="build_aa_ap_tar"  depends="clean-dist,clean-lib,stubs_aa,stubs_ap, base_aa,base_ap, samples,jsp_aa,jsp_ap, doc_aa_ap" description="build tar file" >
+		<mkdir dir="${dist.dir}" />
+		<antcall target="ide_templates">
+			<param name="projectname" value="Platform_SDK_SOAP" />
+		</antcall>
+		<tar destfile="${platform_java_soap_sdk_tar}"  longfile="gnu">
+			<tarfileset dir="." includes="src/** cert/** docs/** licenses/** lib/**  wsdl/** samples/**"  >
+				<patternset refid="dist.fileset" />
+				<patternset refid="docs.aa.ap.patternset" />
+				<patternset refid="exclude.p.patternset" />
+				<include name="*.txt" />
+				<!--<include name="BuildAA/**" />
+				<include name="BuildAP/**" />-->
+				<include name="wsdl/AdaptiveAccounts.wsdl"/>
+				<include name="wsdl/AdaptivePayments.wsdl"/>
+				<exclude name="wsdl/Permissions.wsdl"/>
+			</tarfileset>
+			<tarfileset dir="${buildtemp}/templates/"/>
+		</tar>
+		<gzip src="${platform_java_soap_sdk_tar}" destfile="${platform_java_soap_sdk_tar}.gz"/>
+		<copy todir=".">
+			<fileset dir="${env.TEMP}/platformsdkbuild/dist" />
+		</copy>
+	</target>
+
+	<target name="build_aa_ap_p" depends="clean-dist,clean-lib,stubs,base,samples,jsp_aa,jsp_ap,jsp_p,doc_all">
+		<mkdir dir="${dist.dir}" />
+		<antcall target="ide_templates">
+			<param name="projectname" value="Platform_SDK_SOAP" />
+		</antcall>
+		<zip zipfile="${dist.soap.filename}" update="true">
+			<zipfileset dir="." includes="src/** cert/** docs/** licenses/** lib/**  wsdl/** samples/** README*" >
+				<patternset refid="dist.fileset" />
+				<include name="*.txt" />
+				<!--<include name="BuildAA/**" />
+				<include name="BuildAP/**" />
+				<include name="BuildP/**" />-->
+			</zipfileset>
+			<zipfileset dir="${buildtemp}/templates/"/>
+		</zip>
+		<copy todir=".">
+			<fileset dir="${env.TEMP}/platformsdkbuild/dist" />
+		</copy>
+	</target>
+
+	<target name="build_aa_ap_p_tar" depends="clean-dist,clean-lib,stubs, base, samples,jsp_aa,jsp_ap,jsp_p,doc_all" description="build tar file">
+		<mkdir dir="${dist.dir}" />
+		<antcall target="ide_templates">
+			<param name="projectname" value="Platform_SDK_SOAP" />
+		</antcall>
+		<tar destfile="${platform_java_soap_sdk_tar}"  longfile="gnu">
+			<tarfileset dir="." includes="src/** cert/** docs/** licenses/** lib/**  wsdl/** samples/** README*"  >
+				<patternset refid="dist.fileset" />
+				<include name="*.txt" />
+				<!--<include name="BuildAA/**" />
+				<include name="BuildAP/**" />
+				<include name="BuildP/**" />-->
+			</tarfileset>
+			<tarfileset dir="${buildtemp}/templates/"/>
+		</tar>
+		<gzip src="${platform_java_soap_sdk_tar}" destfile="${platform_java_soap_sdk_tar}.gz"/>
+		<copy todir=".">
+			<fileset dir="${env.TEMP}/platformsdkbuild/dist" />
+		</copy>
+	</target>
+	<!--***************************-->
+	<!-- AdaptivePayment(AP) target  -->
+	<!--***************************-->
+
+	<target name="build_ap" depends="clean-dist,clean-lib,stubs_ap, base_ap, samples, jsp_ap, doc_ap">
+		<mkdir dir="${dist.dir}" />
+		<antcall target="ide_templates">
+			<param name="projectname" value="Platform_SDK_SOAP" />
+		</antcall>
+		<zip zipfile="${dist.soap.ap.filename}" update="true">
+			<!--<zipfileset dir="." includes="BuildAP/build.xml" fullpath="build.xml" />-->
+			<zipfileset dir="."  includes="src/adaptivepayments/** src/common/**
+		 	     	 cert/**  licenses/** lib/** ">
+				<patternset refid="samples.ap.patternset" />
+				<patternset refid="docs.ap.patternset" />
+				<include name="wsdl/AdaptivePayments.wsdl" />
+				<patternset refid="dist.fileset" />
+				<!--<include name="build.properties" />
+				<include name=".project" />
+				<include name=".classpath" />-->
+			</zipfileset>
+			<zipfileset dir="${buildtemp}/templates/"/>
+		</zip>
+		<copy todir=".">
+			<fileset dir="${env.TEMP}/platformsdkbuild/dist" />
+		</copy>
+	</target>
+	<target name="build_ap_tar" description="build tar file" depends="clean-dist,clean-lib,stubs_ap, base_ap, samples, jsp_ap, doc_ap">
+		<mkdir dir="${dist.dir}" />
+		<antcall target="ide_templates">
+			<param name="projectname" value="Platform_SDK_SOAP" />
+		</antcall>
+		<tar destfile="${platform_java_soap_ap_sdk_tar}"  longfile="gnu" >
+			<!--<tarfileset dir="." includes="BuildAP/build.xml" fullpath="build.xml" />-->
+			<tarfileset dir="." includes="src/adaptivepayments/** src/common/**
+	 	     	 cert/**  licenses/** lib/** " >
+				<patternset refid="samples.ap.patternset" />
+				<patternset refid="docs.ap.patternset" />
+				<include name="wsdl/AdaptivePayments.wsdl" />
+				<patternset refid="dist.fileset" />
+				<!--<include name="build.properties" />
+				<include name=".project" />
+				<include name=".classpath" />-->
+			</tarfileset>
+			<tarfileset dir="${buildtemp}/templates/"/>
+		</tar>
+		<gzip src="${platform_java_soap_ap_sdk_tar}" destfile="${platform_java_soap_ap_sdk_tar}.gz"/>
+		<copy todir=".">
+			<fileset dir="${env.TEMP}/platformsdkbuild/dist" />
+		</copy>
+	</target>
+	<!--***************************-->
+	<!-- AdaptiveAccount(AA) target -->
+	<!--***************************-->
+
+	<target name="build_aa" depends="clean-dist,clean-lib,stubs_aa,base_aa,samples,jsp_aa,doc_aa">
+		<mkdir dir="${dist.dir}" />
+		<antcall target="ide_templates">
+			<param name="projectname" value="Platform_SDK_SOAP" />
+		</antcall>
+		<zip zipfile="${dist.soap.aa.filename}" update="true">
+			<!--<zipfileset dir="." includes="BuildAA/build.xml" fullpath="build.xml" />-->
+			<zipfileset dir="."  includes="src/adaptiveaccounts/** src/common/**
+		 	     	 cert/** licenses/** lib/** ">
+				<patternset refid="samples.aa.patternset" />
+				<patternset refid="docs.aa.patternset" />
+				<include name="wsdl/CreateAccount.wsdl" />
+				<patternset refid="dist.fileset" />
+				<!--<include name="build.properties" />
+				<include name=".project" />
+				<include name=".classpath" />-->
+			</zipfileset>
+			<zipfileset dir="${buildtemp}/templates/"/>
+		</zip>
+		<copy todir=".">
+			<fileset dir="${env.TEMP}/platformsdkbuild/dist" />
+		</copy>
+	</target>
+	<target name="build_aa_tar" depends="clean-dist,clean-lib,stubs_aa,base_aa,samples,jsp_aa,doc_aa" description="build tar file" >
+		<mkdir dir="${dist.dir}" />
+		<antcall target="ide_templates">
+			<param name="projectname" value="Platform_SDK_SOAP" />
+		</antcall>
+		<tar destfile="${platform_java_soap_aa_sdk_tar}"  longfile="gnu">
+			<!--<tarfileset dir="." includes="BuildAA/build.xml" fullpath="build.xml" />-->
+			<tarfileset dir="."   includes="src/adaptiveaccounts/** src/common/**  cert/** licenses/** lib/** ">
+				<patternset refid="samples.aa.patternset" />
+				<patternset refid="docs.aa.patternset" />
+				<include name="wsdl/CreateAccount.wsdl" />
+				<patternset refid="dist.fileset" />
+				<!--<include name="build.properties" />
+				<include name=".project" />
+				<include name=".classpath" />-->
+			</tarfileset>
+			<tarfileset dir="${buildtemp}/templates/"/>
+		</tar>
+		<gzip src="${platform_java_soap_aa_sdk_tar}" destfile="${platform_java_soap_aa_sdk_tar}.gz"/>
+		<copy todir=".">
+			<fileset dir="${env.TEMP}/platformsdkbuild/dist" />
+		</copy>
+	</target>
+	<!--***************************-->
+	<!-- Permission(P) target -->
+	<!--***************************-->
+	<target name="build_p" depends="clean-dist,clean-lib,stubs_p,base_p,jsp_p,doc_p">
+		<mkdir dir="${dist.dir}" />
+		<antcall target="ide_templates">
+			<param name="projectname" value="Platform_SDK_Permissions" />
+		</antcall>
+		<zip zipfile="${dist.soap.p.filename}" update="true">
+			<!--<zipfileset dir="." includes="BuildP/build.xml" fullpath="build.xml" />-->
+			<zipfileset dir="."  includes="src/permissions/** src/common/**
+		 	     	 cert/** licenses/** lib/** ">
+				<patternset refid="samples.p.patternset" />
+				<patternset refid="docs.p.patternset" />
+				<include name="wsdl/Permissions.wsdl" />
+				<patternset refid="dist.fileset" />
+
+				<!--<include name="build.properties" />
+				<include name=".project" />
+				<include name=".classpath" />-->
+			</zipfileset>
+			<zipfileset dir="${buildtemp}/templates/"/>
+		</zip>
+		<copy todir=".">
+			<fileset dir="${env.TEMP}/platformsdkbuild/dist" />
+		</copy>
+	</target>
+
+	<target name="build_p_tar" depends="clean-dist,clean-lib,stubs_p,base_p,jsp_p,doc_p" description="build tar file" >
+		<mkdir dir="${dist.dir}" />
+		<antcall target="ide_templates">
+			<param name="projectname" value="Platform_SDK_Permissions" />
+		</antcall>
+		<tar destfile="${platform_java_soap_sdk_p_tar}"  longfile="gnu">
+			<!--<tarfileset dir="." includes="BuildP/build.xml" fullpath="build.xml" />-->
+			<tarfileset dir="."   includes="src/permissions/** src/common/**  cert/** licenses/** lib/** ">
+				<patternset refid="samples.p.patternset" />
+				<patternset refid="docs.p.patternset" />
+				<include name="wsdl/Permissions.wsdl" />
+				<patternset refid="dist.fileset" />
+				<!--<include name="build.properties" />
+				<include name=".project" />
+				<include name=".classpath" />-->
+			</tarfileset>
+			<tarfileset dir="${buildtemp}/templates/"/>
+		</tar>
+		<gzip src="${platform_java_soap_sdk_p_tar}" destfile="${platform_java_soap_sdk_p_tar}.gz"/>
+		<copy todir=".">
+			<fileset dir="${env.TEMP}/platformsdkbuild/dist" />
+		</copy>
+	</target>
+	<!-- Usage -->
+	<target name="help">
+		<echo message="Usage:" />
+		<echo message="----------------------------------------------------------------------" />
+		<echo message="  ant build_aa_ap to build both (AA , AP) SOAP core library and stubs and JSP war file in .zip format" />
+		<echo message="  ant build_aa_ap_tar to build both (AA , AP) SOAP core library and stubs and JSP war file in .tar and .gzip format" />
+		<echo message="  ant build_aa_ap_p to build both (AA , AP, P) SOAP core library and stubs and JSP war file in .zip format" />
+		<echo message="  ant build_aa_ap_p_tar to build both (AA , AP, P) SOAP core library and stubs and JSP war file in .tar and .gzip format" />
+		<echo message="  ant build_aa to build AA SOAP core library and stubs and JSP war file in .zip format" />
+		<echo message="  ant build_aa_tar to build AA SOAP core library and stubs and JSP war file in .tar and .gzip format" />
+		<echo message="  ant build_ap to build AP SOAP core library and stubs and JSP war file in .zip format" />
+		<echo message="  ant build_ap_tar to build AP SOAP core library and stubs and JSP war file in .tar and .gzip format." />
+		<echo message="  ant build_p to build Permission SOAP core library and stubs and JSP war file in .zip format" />
+		<echo message="  ant build_p_tar to build Permission SOAP core library and stubs and JSP war file in .tar and .gzip format" />
+		<echo message="----------------------------------------------------------------------" />
+		<echo message="AA-AdaptiveAccount,AP-AdaptivePayment,P-Permission" />
+		<!--<echo  message="${jdk-Version}" />-->
+	</target>
+</project>

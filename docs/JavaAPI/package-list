@@ -1,0 +1,10 @@
+adaptiveaccounts
+adaptivepayments
+com.paypal.svcs.services
+com.paypal.svcs.types.aa
+com.paypal.svcs.types.ap
+com.paypal.svcs.types.common
+common.com.paypal.platform.sdk
+common.com.paypal.platform.sdk.exceptions
+common.com.paypal.platform.sdk.logging
+common.com.paypal.platform.sdk.utils
