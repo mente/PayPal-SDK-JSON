@@ -88,4 +88,14 @@ public class CurrencyType {
         this.amount = value;
     }
 
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("CurrencyType");
+		sb.append("{amount=").append(amount);
+		sb.append(", code='").append(code).append('\'');
+		sb.append('}');
+		return sb.toString();
+	}
 }

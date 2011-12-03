@@ -209,4 +209,17 @@ public class FundingSource {
         return this.any;
     }
 
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("FundingSource");
+		sb.append("{allowed=").append(allowed);
+		sb.append(", any=").append(any);
+		sb.append(", displayName='").append(displayName).append('\'');
+		sb.append(", fundingSourceId='").append(fundingSourceId).append('\'');
+		sb.append(", lastFourOfAccountNumber='").append(lastFourOfAccountNumber).append('\'');
+		sb.append(", type='").append(type).append('\'');
+		sb.append('}');
+		return sb.toString();
+	}
 }

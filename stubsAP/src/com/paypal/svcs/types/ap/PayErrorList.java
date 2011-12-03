@@ -66,4 +66,13 @@ public class PayErrorList {
         return this.payError;
     }
 
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("PayErrorList");
+		sb.append("{payError=").append(payError);
+		sb.append('}');
+		return sb.toString();
+	}
 }

@@ -214,4 +214,17 @@ public class PayResponse {
         return this.any;
     }
 
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("PayResponse");
+		sb.append("{any=").append(any);
+		sb.append(", defaultFundingPlan=").append(defaultFundingPlan);
+		sb.append(", payErrorList=").append(payErrorList);
+		sb.append(", payKey='").append(payKey).append('\'');
+		sb.append(", paymentExecStatus='").append(paymentExecStatus).append('\'');
+		sb.append(", responseEnvelope=").append(responseEnvelope);
+		sb.append('}');
+		return sb.toString();
+	}
 }

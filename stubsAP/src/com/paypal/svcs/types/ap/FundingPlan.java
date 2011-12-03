@@ -245,4 +245,19 @@ public class FundingPlan {
         return this.any;
     }
 
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("FundingPlan");
+		sb.append("{any=").append(any);
+		sb.append(", backupFundingSource=").append(backupFundingSource);
+		sb.append(", charge=").append(charge);
+		sb.append(", currencyConversion=").append(currencyConversion);
+		sb.append(", fundingAmount=").append(fundingAmount);
+		sb.append(", fundingPlanId='").append(fundingPlanId).append('\'');
+		sb.append(", senderFees=").append(senderFees);
+		sb.append('}');
+		return sb.toString();
+	}
 }

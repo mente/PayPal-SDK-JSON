@@ -270,4 +270,19 @@ public class Receiver {
         return this.any;
     }
 
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Receiver");
+		sb.append("{amount=").append(amount);
+		sb.append(", any=").append(any);
+		sb.append(", email='").append(email).append('\'');
+		sb.append(", invoiceId='").append(invoiceId).append('\'');
+		sb.append(", paymentSubType='").append(paymentSubType).append('\'');
+		sb.append(", paymentType='").append(paymentType).append('\'');
+		sb.append(", phone=").append(phone);
+		sb.append(", primary=").append(primary);
+		sb.append('}');
+		return sb.toString();
+	}
 }

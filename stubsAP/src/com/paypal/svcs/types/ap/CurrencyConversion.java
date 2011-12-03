@@ -159,4 +159,16 @@ public class CurrencyConversion {
         return this.any;
     }
 
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("CurrencyConversion");
+		sb.append("{any=").append(any);
+		sb.append(", exchangeRate=").append(exchangeRate);
+		sb.append(", from=").append(from);
+		sb.append(", to=").append(to);
+		sb.append('}');
+		return sb.toString();
+	}
 }

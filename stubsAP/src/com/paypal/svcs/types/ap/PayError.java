@@ -131,4 +131,15 @@ public class PayError {
         return this.any;
     }
 
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("PayError");
+		sb.append("{any=").append(any);
+		sb.append(", error=").append(error);
+		sb.append(", receiver=").append(receiver);
+		sb.append('}');
+		return sb.toString();
+	}
 }
