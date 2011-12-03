@@ -105,13 +105,30 @@ public class CallerServices {
 	protected OutputStream output = new StringOutputStream();
 	private boolean apiCallStatus = false;
 	private HttpClient httpClient;
+
+	public CallerServices() {
+		this(createHttpClient());
+	}
 	
+	public CallerServices(HttpClient httpClient) {
+		this.httpClient = httpClient;
+	}
+
+	private static HttpClient createHttpClient() {
+		ThreadSafeClientConnManager connManager = new ThreadSafeClientConnManager();
+		return new DefaultHttpClient(connManager);
+	}
+
 	/**
 	 * Returns the status of the last API call
 	 * @return boolean either true or False
 	 */
-	public boolean isSucess() {
+	public boolean isSuccess() {
 		return apiCallStatus;
+	}
+
+	public void setHttpClient(HttpClient httpClient) {
+		this.httpClient = httpClient;
 	}
 
 	protected void setApiCallStatus(boolean apiCallStatus) {
@@ -325,9 +342,8 @@ public class CallerServices {
 
 	private static String getProxyHostName() {
 		if ("true".equalsIgnoreCase(clientprops.getProperty("USE_PROXY"))) {
-			String proxy = clientprops.getProperty("PROXY_HOST") + ":"
+			return clientprops.getProperty("PROXY_HOST") + ":"
 			+ clientprops.getProperty("PROXY_PORT");
-			return proxy;
 		} else {
 			return "No proxy server used!";
 		}
@@ -461,14 +477,12 @@ public class CallerServices {
 	    // JAX-WS Reference Implementation
 		log.info("[PayPal CallerServices] using JAX-WS reference implementation");
 	    Map<String, List<String>> map = new ConcurrentHashMap<String, List<String>>();
-	    for (Iterator<Map.Entry<Object, Object>> iterator = clientprops
-	        .entrySet().iterator(); iterator.hasNext();) {
-	      Map.Entry<Object, Object> type = iterator.next();
-	      String headername = (String) type.getKey();
-	      if (headername.startsWith("X-PAYPAL")) {
-	        map.put(headername, Collections.singletonList((String) type.getValue()));
-	      }
-	    }
+		  for (Map.Entry<Object, Object> type : clientprops.entrySet()) {
+			  String headername = (String) type.getKey();
+			  if (headername.startsWith("X-PAYPAL")) {
+				  map.put(headername, Collections.singletonList((String) type.getValue()));
+			  }
+		  }
 	    if(clientprops.getProperty("X-PAYPAL-REQUEST-DATA-FORMAT").equalsIgnoreCase("SOAP11")){
 			map.remove("X-PAYPAL-REQUEST-DATA-FORMAT");
 			map.remove("X-PAYPAL-RESPONSE-DATA-FORMAT");
