@@ -5,6 +5,8 @@ Improved version of PayPal Java SDK for AdaptivePayments. Changes:
 - httpclient can be injected
 - httpclient upgraded to 4.1.2 version
 
+Package has IntellijIdea files, that eases import to IDE
+
 TODO - use Jackson instead of Gson (should be simple?)
 
 All copyrights goes to PayPal
