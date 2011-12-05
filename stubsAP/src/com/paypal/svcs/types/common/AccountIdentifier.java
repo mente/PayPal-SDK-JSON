@@ -129,4 +129,15 @@ public class AccountIdentifier {
         return this.any;
     }
 
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("AccountIdentifier");
+		sb.append("{any=").append(any);
+		sb.append(", email='").append(email).append('\'');
+		sb.append(", phone=").append(phone);
+		sb.append('}');
+		return sb.toString();
+	}
 }

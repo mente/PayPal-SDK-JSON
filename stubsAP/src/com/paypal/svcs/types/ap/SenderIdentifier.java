@@ -64,5 +64,4 @@ public class SenderIdentifier
     public void setUseCredentials(Boolean value) {
         this.useCredentials = value;
     }
-
 }

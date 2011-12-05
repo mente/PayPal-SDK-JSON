@@ -66,4 +66,13 @@ public class ReceiverList {
         return this.receiver;
     }
 
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("ReceiverList");
+		sb.append("{receiver=").append(receiver);
+		sb.append('}');
+		return sb.toString();
+	}
 }

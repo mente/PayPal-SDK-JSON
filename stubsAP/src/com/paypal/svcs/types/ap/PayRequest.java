@@ -541,4 +541,30 @@ public class PayRequest {
         return this.any;
     }
 
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("PayRequest");
+		sb.append("{actionType='").append(actionType).append('\'');
+		sb.append(", any=").append(any);
+		sb.append(", cancelUrl='").append(cancelUrl).append('\'');
+		sb.append(", clientDetails=").append(clientDetails);
+		sb.append(", currencyCode='").append(currencyCode).append('\'');
+		sb.append(", feesPayer='").append(feesPayer).append('\'');
+		sb.append(", fundingConstraint=").append(fundingConstraint);
+		sb.append(", ipnNotificationUrl='").append(ipnNotificationUrl).append('\'');
+		sb.append(", memo='").append(memo).append('\'');
+		sb.append(", pin='").append(pin).append('\'');
+		sb.append(", preapprovalKey='").append(preapprovalKey).append('\'');
+		sb.append(", receiverList=").append(receiverList);
+		sb.append(", requestEnvelope=").append(requestEnvelope);
+		sb.append(", returnUrl='").append(returnUrl).append('\'');
+		sb.append(", reverseAllParallelPaymentsOnError=").append(reverseAllParallelPaymentsOnError);
+		sb.append(", sender=").append(sender);
+		sb.append(", senderEmail='").append(senderEmail).append('\'');
+		sb.append(", trackingId='").append(trackingId).append('\'');
+		sb.append('}');
+		return sb.toString();
+	}
 }

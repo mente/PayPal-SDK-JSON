@@ -1,7 +1,10 @@
 Improved version of PayPal Java SDK for AdaptivePayments. Changes:
 - PPFaultMessage has verbose toString() method
+- PayRequest has verbose toString() method
 - httpclient is initialized once per instance, rather then per request
 - httpclient can be injected
 - httpclient upgraded to 4.1.2 version
 
 TODO - use Jackson instead of Gson (should be simple?)
+
+All copyrights goes to PayPal

@@ -57,4 +57,13 @@ public class FundingConstraint {
         this.allowedFundingType = value;
     }
 
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("FundingConstraint");
+		sb.append("{allowedFundingType=").append(allowedFundingType);
+		sb.append('}');
+		return sb.toString();
+	}
 }

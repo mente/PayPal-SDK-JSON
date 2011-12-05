@@ -289,4 +289,21 @@ public class ClientDetailsType {
         return this.any;
     }
 
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("ClientDetailsType");
+		sb.append("{any=").append(any);
+		sb.append(", applicationId='").append(applicationId).append('\'');
+		sb.append(", customerId='").append(customerId).append('\'');
+		sb.append(", customerType='").append(customerType).append('\'');
+		sb.append(", deviceId='").append(deviceId).append('\'');
+		sb.append(", geoLocation='").append(geoLocation).append('\'');
+		sb.append(", ipAddress='").append(ipAddress).append('\'');
+		sb.append(", model='").append(model).append('\'');
+		sb.append(", partnerName='").append(partnerName).append('\'');
+		sb.append('}');
+		return sb.toString();
+	}
 }

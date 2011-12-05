@@ -129,4 +129,15 @@ public class RequestEnvelope {
         return this.any;
     }
 
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("RequestEnvelope");
+		sb.append("{any=").append(any);
+		sb.append(", detailLevel=").append(detailLevel);
+		sb.append(", errorLanguage='").append(errorLanguage).append('\'');
+		sb.append('}');
+		return sb.toString();
+	}
 }

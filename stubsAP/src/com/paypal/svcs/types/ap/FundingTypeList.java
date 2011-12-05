@@ -66,4 +66,13 @@ public class FundingTypeList {
         return this.fundingTypeInfo;
     }
 
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("FundingTypeList");
+		sb.append("{fundingTypeInfo=").append(fundingTypeInfo);
+		sb.append('}');
+		return sb.toString();
+	}
 }

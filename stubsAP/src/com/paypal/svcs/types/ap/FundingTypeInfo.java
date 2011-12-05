@@ -102,4 +102,14 @@ public class FundingTypeInfo {
         return this.any;
     }
 
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("FundingTypeInfo");
+		sb.append("{any=").append(any);
+		sb.append(", fundingType='").append(fundingType).append('\'');
+		sb.append('}');
+		return sb.toString();
+	}
 }
